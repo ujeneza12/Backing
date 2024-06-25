@@ -3,8 +3,10 @@ package com.rca.ac.rw.ne.backend.service;
 import com.rca.ac.rw.ne.backend.api.model.BankingModel;
 import com.rca.ac.rw.ne.backend.model.Banking;
 import com.rca.ac.rw.ne.backend.model.LocalUser;
+import com.rca.ac.rw.ne.backend.model.Message;
 import com.rca.ac.rw.ne.backend.model.dao.BankingDAO;
 import com.rca.ac.rw.ne.backend.model.dao.LocalUserDAO;
+import com.rca.ac.rw.ne.backend.model.dao.MessageDAO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +17,14 @@ public class BankingService {
     private BankingDAO bankingDAO;
     private LocalUserDAO localUserDAO;
 
-    public BankingService(BankingDAO bankingDAO,LocalUserDAO localUserDAO){
+  private MessageDAO messageDAO;
+
+    public BankingService(BankingDAO bankingDAO,LocalUserDAO localUserDAO,MessageDAO messageDAO){
 
         this.localUserDAO=localUserDAO;
         this.bankingDAO=bankingDAO;
+        this.messageDAO=messageDAO;
+
     }
 
     @Transactional
@@ -56,7 +62,23 @@ public class BankingService {
         }
 
         localUserDAO.save(user); // Update user balance
-        return bankingDAO.save(banking); // Save banking transaction
+        Banking savedBanking = bankingDAO.save(banking); // Save banking transaction
+
+        // Send message to user about the transaction
+        sendMessageToUser(user, bankingModel.getType(), bankingModel.getAmount(), bankingModel.getAccount());
+
+        return savedBanking;
+    }
+
+
+
+    private void sendMessageToUser(LocalUser user, String transactionType, double amount, String account) {
+        Message message = new Message();
+        message.setUser(user);
+        message.setMessage(String.format("Dear %s %s, your %s of %.2f on your account %s has been completed successfully.",
+                user.getFirstname(), user.getLastname(), transactionType, amount, account));
+        message.setDateTime(LocalDateTime.now());
+        messageDAO.save(message);
     }
 }
 
