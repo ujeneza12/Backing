@@ -1,15 +1,10 @@
 package com.rca.ac.rw.ne.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.rca.ac.rw.ne.backend.model.dao.AllowedEmailDomains;
+
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +40,7 @@ public class LocalUser {
     private double balance;
 
     @NotNull
-    private Date lastUpdateTime;
+    private Date last_update_time;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Banking> transactions;

@@ -27,7 +27,7 @@ public class UserServices {
         user.setBalance(registrationModel.getBalance());
         user.setEmail(registrationModel.getEmail());
         user.setPhone(registrationModel.getPhone());
-        user.setLastUpdateTime(registrationModel.getLast_update_time());
+        user.setLast_update_time(registrationModel.getLast_update_time());
 
         return localUserDAO.save(user);
 

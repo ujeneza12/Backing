@@ -22,15 +22,13 @@ public class BankingService {
     private LocalUserDAO localUserDAO;
 
   private MessageDAO messageDAO;
-  private final JavaMailSender javaMailSender;
+//  private final JavaMailSender javaMailSender;
 
-    public BankingService(BankingDAO bankingDAO,LocalUserDAO localUserDAO,MessageDAO messageDAO,JavaMailSender javaMailSender){
+    public BankingService(BankingDAO bankingDAO,LocalUserDAO localUserDAO,MessageDAO messageDAO){
 
         this.localUserDAO=localUserDAO;
         this.bankingDAO=bankingDAO;
         this.messageDAO=messageDAO;
-        this.javaMailSender=javaMailSender;
-
     }
 
     @Transactional
@@ -44,7 +42,7 @@ public class BankingService {
         banking.setAccount(bankingModel.getAccount());
         banking.setAmount(bankingModel.getAmount());
         banking.setType(bankingModel.getType());
-        banking.setBankingDateTime(LocalDateTime.now());
+        banking.setBanking_date_time(banking.getBanking_date_time());
 
         // Update user balance based on transaction type
         if (bankingModel.getType().equalsIgnoreCase("saving")) {
@@ -76,31 +74,31 @@ public class BankingService {
         return savedBanking;
     }
 
-    private void sendEmail(String recipientEmail, String subject, String messageBody) {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper;
-
-        try {
-            helper = new MimeMessageHelper(message, true);
-            helper.setTo(recipientEmail);
-            helper.setSubject(subject);
-            helper.setText(messageBody, true); // true indicates HTML format
-
-            javaMailSender.send(message);
-        } catch (MessagingException e) {
-            // Handle exception properly
-            e.printStackTrace();
-            // You can log the exception or throw a custom exception
-            throw new RuntimeException("Failed to send email", e);
-        }
-    }
+//    private void sendEmail(String recipientEmail, String subject, String messageBody) {
+//        MimeMessage message = javaMailSender.createMimeMessage();
+//        MimeMessageHelper helper;
+//
+//        try {
+//            helper = new MimeMessageHelper(message, true);
+//            helper.setTo(recipientEmail);
+//            helper.setSubject(subject);
+//            helper.setText(messageBody, true); // true indicates HTML format
+//
+//            javaMailSender.send(message);
+//        } catch (MessagingException e) {
+//            // Handle exception properly
+//            e.printStackTrace();
+//            // You can log the exception or throw a custom exception
+//            throw new RuntimeException("Failed to send email", e);
+//        }
+//    }
 
     private void sendMessageToUser(LocalUser user, String transactionType, double amount, String account) {
 
         String messageText = String.format("Dear %s %s, your %s of %.2f on your account %s has been completed successfully.",
                 user.getFirstname(), user.getLastname(), transactionType, amount, account);
         Message message = new Message();
-        sendEmail(user.getEmail(), "Transaction Notification", messageText);
+//        sendEmail(user.getEmail(), "Transaction Notification", messageText);
 
         message.setUser(user);
         message.setMessage(messageText);

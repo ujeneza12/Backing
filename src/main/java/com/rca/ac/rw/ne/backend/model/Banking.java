@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -20,7 +21,7 @@ public class Banking {
     private String account;
     private double amount;
     private String type; // "saving", "withdraw", "transfer"
-    private LocalDateTime bankingDateTime;
+    private Date banking_date_time;
 
     // Getters and Setters
 }
